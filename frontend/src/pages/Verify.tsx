@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { UploadCloud, Search, AlertTriangle, CheckCircle, XCircle, Loader2, Globe, FileText } from 'lucide-react';
+import { UploadCloud, Search, AlertTriangle, CheckCircle, Loader2, Globe, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { jsPDF } from 'jspdf';
