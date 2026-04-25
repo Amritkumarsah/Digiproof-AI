@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Globe, Code, Shield, Radio, PlayCircle, AlertTriangle, CheckCircle, Copy, Video } from 'lucide-react';
+import { Globe, Code, Shield, Radio, PlayCircle, AlertTriangle, CheckCircle, Copy, Video, ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 
 const ProTools = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'whitelisting' | 'livestream'>('whitelisting');
   const [domain, setDomain] = useState('');
   const [whitelistedDomains, setWhitelistedDomains] = useState<string[]>(['myportfolio.com']);
@@ -59,6 +61,12 @@ const ProTools = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-12 w-full">
+      <button 
+        onClick={() => navigate(-1)} 
+        className="flex items-center text-sm font-medium text-slate-400 hover:text-white mb-6 transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4 mr-2" /> Back
+      </button>
       <div className="mb-10 text-center">
         <h1 className="text-3xl font-bold text-white mb-3 flex items-center justify-center">
           <Shield className="w-8 h-8 text-secondary mr-3" />

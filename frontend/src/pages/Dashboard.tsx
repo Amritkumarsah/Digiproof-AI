@@ -1,10 +1,12 @@
 import { useState, useRef } from 'react';
-import { UploadCloud, File as FileIcon, CheckCircle2, ShieldAlert, Loader2 } from 'lucide-react';
+import { UploadCloud, File as FileIcon, CheckCircle2, ShieldAlert, Loader2, ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { jsPDF } from 'jspdf';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [file, setFile] = useState<File | null>(null);
   const [uploadStep, setUploadStep] = useState<number>(0); // 0: idle, 1: uploading, 2: fingerprint, 3: cloud, 4: done
   const [assetId, setAssetId] = useState<string | null>(null);
@@ -89,6 +91,12 @@ const Dashboard = () => {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-12 w-full">
+      <button 
+        onClick={() => navigate(-1)} 
+        className="flex items-center text-sm font-medium text-slate-400 hover:text-white mb-6 transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4 mr-2" /> Back
+      </button>
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white mb-2">Asset Registration Portal</h1>
         <p className="text-slate-400">Upload your original content to generate an immutable AI fingerprint.</p>

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { User, Shield, Bell, CreditCard, Key, Smartphone, HardDrive, Download, CheckCircle2 } from 'lucide-react';
+import { User, Shield, Bell, CreditCard, Key, Smartphone, HardDrive, Download, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 
@@ -34,6 +34,12 @@ const Settings = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 w-full flex-1">
+      <button 
+        onClick={() => navigate(-1)} 
+        className="flex items-center text-sm font-medium text-slate-400 hover:text-white mb-6 transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4 mr-2" /> Back
+      </button>
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
         <p className="text-slate-400">Manage your account preferences, billing, and security.</p>

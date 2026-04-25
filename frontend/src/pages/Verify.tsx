@@ -1,10 +1,12 @@
 import { useState, useRef } from 'react';
-import { UploadCloud, Search, AlertTriangle, CheckCircle, Loader2, Globe, FileText } from 'lucide-react';
+import { UploadCloud, Search, AlertTriangle, CheckCircle, Loader2, Globe, FileText, ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { jsPDF } from 'jspdf';
 
 const Verify = () => {
+  const navigate = useNavigate();
   const [file, setFile] = useState<File | null>(null);
   const [verifyStep, setVerifyStep] = useState<number>(0);
   const [result, setResult] = useState<{ score: number, status: 'match' | 'fake' | 'unknown', message: string } | null>(null);
@@ -85,6 +87,12 @@ const Verify = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12 w-full">
+      <button 
+        onClick={() => navigate(-1)} 
+        className="flex items-center text-sm font-medium text-slate-400 hover:text-white mb-6 transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4 mr-2" /> Back
+      </button>
       <div className="text-center mb-10">
         <h1 className="text-3xl font-bold text-white mb-3">AI Dispute Analyzer</h1>
         <p className="text-slate-400 max-w-2xl mx-auto">
@@ -138,7 +146,7 @@ const Verify = () => {
           <div className="flex-1">
             <h3 className="text-lg font-semibold text-white mb-6">Analysis Results</h3>
             
-            <div className="h-[280px] rounded-2xl bg-dark/50 border border-white/5 flex flex-col items-center justify-center p-6 relative">
+            <div className="min-h-[280px] h-full rounded-2xl bg-dark/50 border border-white/5 flex flex-col items-center justify-center p-6 relative">
               <AnimatePresence mode="wait">
                 {verifyStep > 0 ? (
                   <motion.div 
@@ -208,11 +216,21 @@ const Verify = () => {
                     )}
 
                     {result.status === 'match' && (
-                      <button onClick={generateTakedownNotice} className="flex items-center text-sm font-bold text-white bg-red-600 hover:bg-red-700 w-full py-3 justify-center rounded-xl transition-all shadow-[0_0_15px_rgba(220,38,38,0.3)]">
+                      <button onClick={generateTakedownNotice} className="flex items-center text-sm font-bold text-white bg-red-600 hover:bg-red-700 w-full py-3 justify-center rounded-xl transition-all shadow-[0_0_15px_rgba(220,38,38,0.3)] mb-3">
                         <FileText className="w-4 h-4 mr-2" />
                         Generate Takedown Notice
                       </button>
                     )}
+                    
+                    <button 
+                      onClick={() => {
+                        setResult(null);
+                        setFile(null);
+                      }} 
+                      className="w-full py-3 bg-dark border border-white/10 hover:bg-white/5 rounded-xl font-bold text-white transition-all text-sm mt-2"
+                    >
+                      Back to Upload
+                    </button>
                   </motion.div>
                 ) : (
                   <motion.div 

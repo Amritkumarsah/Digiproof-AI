@@ -156,7 +156,13 @@ const Navbar = ({ role }: { role?: 'user' | 'admin' }) => {
                     className="absolute top-full mt-4 right-0 w-[320px] bg-dark border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50 ring-1 ring-black/5"
                   >
                     {/* Header: User Info */}
-                    <div className="p-4 bg-gradient-to-br from-primary/10 to-transparent border-b border-white/5 flex items-center space-x-3">
+                    <div className="relative p-4 bg-gradient-to-br from-primary/10 to-transparent border-b border-white/5 flex items-center space-x-3">
+                      <button 
+                        onClick={() => setShowProfile(false)} 
+                        className="absolute top-3 right-3 text-slate-400 hover:text-white transition-colors p-1"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
                       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary p-[2px]">
                         <div className="w-full h-full rounded-full bg-dark flex items-center justify-center">
                           <User className="w-6 h-6 text-white" />
