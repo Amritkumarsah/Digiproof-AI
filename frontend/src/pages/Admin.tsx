@@ -5,6 +5,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 const Admin = () => {
   const [selectedIncident, setSelectedIncident] = useState<any | null>(null);
 
+  const adminRole = localStorage.getItem('adminRole') || 'super_admin';
+  const showStats = adminRole === 'super_admin' || adminRole === 'analyst_admin';
+  const showLogs = adminRole === 'super_admin' || adminRole === 'moderator_admin';
+  const showHealth = adminRole === 'super_admin' || adminRole === 'analyst_admin';
+  const showSupport = adminRole === 'super_admin' || adminRole === 'support_admin';
+
+  const supportUsers = [
+    { name: 'Alex Johnson', email: 'alex@example.com', joined: 'Oct 12, 2026', status: 'Active' },
+    { name: 'Sarah Miller', email: 'sarah@example.com', joined: 'Nov 02, 2026', status: 'Active' },
+    { name: 'Michael Design', email: 'mike@design.co', joined: 'Dec 15, 2026', status: 'Warned' },
+  ];
+
   const stats = [
     { label: 'Total Protected Assets', value: '14,205', icon: <FileText className="w-6 h-6 text-primary" />, trend: '+12% this week' },
     { label: 'Active Creators', value: '3,842', icon: <Users className="w-6 h-6 text-secondary" />, trend: '+5% this week' },
@@ -31,6 +43,7 @@ const Admin = () => {
         </button>
       </div>
 
+      {showStats && (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         {stats.map((stat, idx) => (
           <motion.div 
@@ -51,8 +64,40 @@ const Admin = () => {
           </motion.div>
         ))}
       </div>
+      )}
+
+      {showSupport && (
+        <div className="bg-dark-paper border border-white/5 rounded-2xl p-6 mb-10">
+          <h3 className="text-lg font-bold text-white mb-6 flex items-center">
+            <Users className="w-5 h-5 mr-2 text-primary" /> Active Platform Users
+          </h3>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left">
+              <thead className="text-xs text-slate-400 uppercase bg-dark/50 border-b border-white/5">
+                <tr>
+                  <th className="px-4 py-3 rounded-tl-lg">User Name</th>
+                  <th className="px-4 py-3">Email Address</th>
+                  <th className="px-4 py-3">Joined Date</th>
+                  <th className="px-4 py-3 rounded-tr-lg">Account Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {supportUsers.map((user, idx) => (
+                  <tr key={idx} className="border-b border-white/5 hover:bg-white/5">
+                    <td className="px-4 py-4 font-bold text-white">{user.name}</td>
+                    <td className="px-4 py-4 text-slate-400">{user.email}</td>
+                    <td className="px-4 py-4 text-slate-300">{user.joined}</td>
+                    <td className={`px-4 py-4 font-medium ${user.status === 'Active' ? 'text-emerald-400' : 'text-amber-400'}`}>{user.status}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {showLogs && (
         <div className="col-span-2 bg-dark-paper border border-white/5 rounded-2xl p-6">
           <h3 className="text-lg font-bold text-white mb-6">Recent Dispute Logs</h3>
           <div className="overflow-x-auto">
@@ -87,8 +132,10 @@ const Admin = () => {
             </table>
           </div>
         </div>
+        )}
 
-        <div className="bg-dark-paper border border-white/5 rounded-2xl p-6">
+        {showHealth && (
+        <div className={`bg-dark-paper border border-white/5 rounded-2xl p-6 ${!showLogs ? 'col-span-3' : ''}`}>
           <h3 className="text-lg font-bold text-white mb-4">System Health</h3>
           <div className="space-y-4">
             <div>
@@ -120,6 +167,7 @@ const Admin = () => {
             </div>
           </div>
         </div>
+        )}
       </div>
 
       {/* Incident Details Modal */}

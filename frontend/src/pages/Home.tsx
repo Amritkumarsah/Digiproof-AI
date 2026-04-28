@@ -47,7 +47,7 @@ const Home = () => {
           variants={itemVariants}
           className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-12"
         >
-          DigiProof AI enables creators to instantly protect their content, detect deepfakes, and generate legal proof certificates using advanced AI fingerprints.
+          Digiproof-AI enables creators to instantly protect their content, detect deepfakes, and generate legal proof certificates using advanced AI fingerprints.
         </motion.p>
 
         <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -55,7 +55,7 @@ const Home = () => {
             <span>Register Asset</span>
             <ArrowRight className="w-5 h-5" />
           </Link>
-          <Link to="/verify" className="w-full sm:w-auto px-8 py-4 rounded-xl font-bold bg-white/5 hover:bg-white/10 border border-white/10 text-white transition-all flex items-center justify-center space-x-2">
+          <Link to="/verify?tab=content" className="w-full sm:w-auto px-8 py-4 rounded-xl font-bold bg-white/5 hover:bg-white/10 border border-white/10 text-white transition-all flex items-center justify-center space-x-2">
             <ShieldCheck className="w-5 h-5 text-emerald-400" />
             <span>Verify Content</span>
           </Link>
@@ -67,9 +67,9 @@ const Home = () => {
           className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-24 text-left"
         >
           {[
-            { icon: <Fingerprint className="w-6 h-6 text-primary" />, title: "Secure Fingerprints", desc: "Generate indestructible cryptographic hashes linked to your assets.", path: "/dashboard" },
-            { icon: <ShieldCheck className="w-6 h-6 text-emerald-400" />, title: "Gemini AI Verification", desc: "Instantly compare suspicious content against your registered originals.", path: "/verify" },
-            { icon: <Zap className="w-6 h-6 text-secondary" />, title: "Auto-Takedown Notices", desc: "One-click generation of DCMA / legal notices with PDF certificates.", path: "/dashboard" },
+            { icon: <Fingerprint className="w-6 h-6 text-primary" />, title: "Secure Fingerprints", desc: "Generate indestructible cryptographic hashes linked to your assets.", path: "/dashboard?tab=fingerprints" },
+            { icon: <ShieldCheck className="w-6 h-6 text-emerald-400" />, title: "Gemini AI Verification", desc: "Instantly compare suspicious content against your registered originals.", path: "/verify?tab=gemini" },
+            { icon: <Zap className="w-6 h-6 text-secondary" />, title: "Auto-Takedown Notices", desc: "One-click generation of DCMA / legal notices with PDF certificates.", path: "/dashboard?tab=takedowns" },
           ].map((feature, idx) => (
             <Link to={feature.path} key={idx}>
               <motion.div variants={itemVariants} className="bg-dark-paper/40 border border-white/5 rounded-2xl p-6 backdrop-blur-sm hover:bg-white/10 hover:-translate-y-1 transition-all h-full cursor-pointer shadow-lg hover:shadow-primary/20">

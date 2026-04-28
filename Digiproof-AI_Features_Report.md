@@ -1,6 +1,6 @@
-# DigiProof AI - Features & Implementation Report
+# Digiproof-AI Features & Technical Decisions Report
 
-Yeh document DigiProof AI application ke sabhi main features, unke kaam karne ke tareeqe, aur unke current MVP (Minimum Viable Product) status ko explain karta hai.
+Yeh document Digiproof-AI application ke sabhi main features, unke kaam karne ke tareeqe, aur unke current MVP (Minimum Viable Product) status ko explain karta hai.
 
 ---
 

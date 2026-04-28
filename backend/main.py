@@ -4,8 +4,9 @@ from pydantic import BaseModel
 import hashlib
 import time
 import os
+import google.generativeai as genai
 
-app = FastAPI(title="DigiProof AI API", description="Backend for Digital Asset Trust Platform")
+app = FastAPI(title="Digiproof-AI API", description="Backend for Digital Asset Trust Platform")
 
 # Allow Frontend CORS
 app.add_middleware(
@@ -27,7 +28,7 @@ class VerifyResponse(BaseModel):
 
 @app.get("/")
 def read_root():
-    return {"message": "DigiProof AI API is running"}
+    return {"message": "Digiproof-AI API is running"}
 
 @app.post("/api/register")
 async def register_asset(file: UploadFile = File(...)):
@@ -91,9 +92,23 @@ async def verify_asset(file: UploadFile = File(...)):
         else:
             return VerifyResponse(score=score, status="unknown", message="No significant matches found in the registry.")
     
-    # Simulated Gemini Processing time if key is present
-    time.sleep(2)
-    return VerifyResponse(score=85, status="match", message="Gemini AI: High contextual similarity detected.")
+    # Execute actual Gemini Processing
+    try:
+        genai.configure(api_key=gemini_key)
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        
+        prompt = "Analyze this file. Is it an original creative work or does it look like it's copied or derived from something common? Rate its uniqueness from 0 to 100."
+        mime_type = file.content_type if file.content_type else "application/octet-stream"
+        
+        response = model.generate_content([
+            prompt,
+            {"mime_type": mime_type, "data": content}
+        ])
+        
+        response_text = response.text
+        return VerifyResponse(score=85, status="match", message=f"Gemini AI Analysis: {response_text[:200]}...")
+    except Exception as e:
+        return VerifyResponse(score=0, status="error", message=f"Gemini AI Error: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

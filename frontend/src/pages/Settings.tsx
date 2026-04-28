@@ -100,11 +100,11 @@ const Settings = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wide">Full Name</label>
-                    <input type="text" defaultValue="Amrit Kumar Sah" className="w-full bg-dark/50 border border-white/10 text-white text-sm rounded-xl focus:ring-primary focus:border-primary p-3 transition-colors" />
+                    <input type="text" defaultValue={localStorage.getItem('userName') || "Amrit Kumar Sah"} className="w-full bg-dark/50 border border-white/10 text-white text-sm rounded-xl focus:ring-primary focus:border-primary p-3 transition-colors" />
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wide">Email Address</label>
-                    <input type="email" defaultValue="amrit@digiproof.ai" className="w-full bg-dark/50 border border-white/10 text-white text-sm rounded-xl focus:ring-primary focus:border-primary p-3 transition-colors" />
+                    <input type="email" defaultValue={localStorage.getItem('userEmail') || "amrit@digiproof.ai"} className="w-full bg-dark/50 border border-white/10 text-white text-sm rounded-xl focus:ring-primary focus:border-primary p-3 transition-colors" />
                   </div>
                   <div className="md:col-span-2">
                     <label className="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wide">Bio / Company Name</label>
@@ -312,7 +312,7 @@ const Settings = () => {
                       <div className="px-2 py-1 bg-white rounded-md text-black font-black text-xs italic">UPI</div>
                       <span className="text-slate-400 text-sm">Auto-Pay Enabled</span>
                     </div>
-                    <p className="text-white font-bold">amrit@okhdfcbank</p>
+                    <p className="text-white font-bold">{(localStorage.getItem('userEmail') || 'user').split('@')[0]}@okhdfcbank</p>
                     <p className="text-sm text-slate-400 mt-1">Google Pay</p>
                   </div>
                 </div>

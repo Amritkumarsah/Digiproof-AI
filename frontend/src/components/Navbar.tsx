@@ -47,7 +47,7 @@ const Navbar = ({ role }: { role?: 'user' | 'admin' }) => {
               <Shield className="w-6 h-6 text-primary" />
             </div>
             <Link to="/" className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
-              DigiProof AI
+              Digiproof-AI
             </Link>
           </div>
           
@@ -169,8 +169,8 @@ const Navbar = ({ role }: { role?: 'user' | 'admin' }) => {
                         </div>
                       </div>
                       <div>
-                        <p className="text-md font-bold text-white leading-tight">Amrit Kumar Sah</p>
-                        <p className="text-xs text-slate-400">amrit@digiproof.ai</p>
+                        <p className="text-md font-bold text-white leading-tight">{localStorage.getItem('userName') || 'Amrit Kumar Sah'}</p>
+                        <p className="text-xs text-slate-400">{localStorage.getItem('userEmail') || 'amrit@digiproof.ai'}</p>
                         <div className={`inline-block px-2 py-0.5 mt-1 text-[9px] font-bold uppercase tracking-wider rounded-md border ${
                           role === 'admin' 
                             ? 'bg-amber-500/10 border-amber-500/20 text-amber-400' 
@@ -219,11 +219,15 @@ const Navbar = ({ role }: { role?: 'user' | 'admin' }) => {
                     {/* Logout Footer */}
                     <div className="p-2 border-t border-white/5 bg-dark-paper">
                       <button 
-                        onClick={() => window.location.reload()}
+                        onClick={() => {
+                          localStorage.removeItem('userName');
+                          localStorage.removeItem('userEmail');
+                          window.location.reload();
+                        }}
                         className="w-full flex items-center justify-center space-x-2 py-2.5 text-sm font-bold text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors"
                       >
                         <LogOut className="w-4 h-4" />
-                        <span>Sign Out from DigiProof</span>
+                        <span>Sign Out from Digiproof-AI</span>
                       </button>
                     </div>
                   </motion.div>

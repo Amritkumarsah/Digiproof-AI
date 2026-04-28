@@ -47,11 +47,11 @@ const ProTools = () => {
     const body = encodeURIComponent(
       `To the Legal Department at Kick.com,\n\n` +
       `I am the authorized copyright owner of the registered digital stream.\n\n` +
-      `The DigiProof AI system has detected an unauthorized, infringing rebroadcast of my copyrighted live stream at the following location:\n` +
+      `The Digiproof-AI system has detected an unauthorized, infringing rebroadcast of my copyrighted live stream at the following location:\n` +
       `https://kick.com/stolen-restream-402\n\n` +
       `I request that you immediately disable access to this infringing content.\n` +
       `I have a good faith belief that the use of the material is not authorized.\n\n` +
-      `Automated by DigiProof AI Legal System\n` +
+      `Automated by Digiproof-AI Legal System\n` +
       `${new Date().toLocaleDateString()}`
     );
     

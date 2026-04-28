@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Shield, Mail, Lock, User } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -15,8 +15,11 @@ const AuthModal = ({ isOpen, onClose, mode: initialMode = 'login', isMandatory =
   const [internalMode, setInternalMode] = useState<'login' | 'register' | 'forgot_password' | 'otp' | 'admin_login'>(initialMode);
   const [isLoading, setIsLoading] = useState(false);
   const [otpCode, setOtpCode] = useState('');
+  const [otpArray, setOtpArray] = useState(['', '', '', '', '', '']);
+  const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
 
   // Sync mode if it changes externally
   useEffect(() => {
@@ -31,12 +34,25 @@ const AuthModal = ({ isOpen, onClose, mode: initialMode = 'login', isMandatory =
     if (internalMode === 'admin_login') {
       setTimeout(() => {
         setIsLoading(false);
-        if (email === 'admin@digiproof.ai' && password === 'admin123') {
-          toast.success("Admin access granted!");
+        
+        const ADMIN_USERS = [
+          { email: 'deepa@digiproof.ai', password: 'password123', name: 'Deepa', role: 'super_admin' },
+          { email: 'gautam@digiproof.ai', password: 'password123', name: 'Gautam', role: 'moderator_admin' },
+          { email: 'amrit@digiproof.ai', password: 'password123', name: 'Amrit', role: 'analyst_admin' },
+          { email: 'sachin@digiproof.ai', password: 'password123', name: 'Sachin', role: 'support_admin' }
+        ];
+
+        const validAdmin = ADMIN_USERS.find(admin => admin.email === email && admin.password === password);
+
+        if (validAdmin) {
+          toast.success(`Welcome back, ${validAdmin.name}! (${validAdmin.role.replace('_', ' ').toUpperCase()})`);
+          localStorage.setItem('userEmail', email);
+          localStorage.setItem('userName', validAdmin.name);
+          localStorage.setItem('adminRole', validAdmin.role);
           if (onSuccess) onSuccess('admin');
           else onClose();
         } else {
-          toast.error("Invalid Admin credentials. Try admin@digiproof.ai / admin123");
+          toast.error("Invalid Admin credentials. Access denied.");
         }
       }, 1500);
       return;
@@ -46,7 +62,23 @@ const AuthModal = ({ isOpen, onClose, mode: initialMode = 'login', isMandatory =
     if (internalMode === 'login') {
       setTimeout(() => {
         setIsLoading(false);
+        const usersStr = localStorage.getItem('registeredUsers');
+        const users = usersStr ? JSON.parse(usersStr) : {};
+        
+        if (!users[email]) {
+          toast.error("Account not found. Please sign up first.");
+          setInternalMode('register');
+          return;
+        }
+        
+        if (users[email].password !== password) {
+          toast.error("Incorrect password.");
+          return;
+        }
+
         toast.success("Successfully logged in!");
+        localStorage.setItem('userEmail', email);
+        localStorage.setItem('userName', users[email].name || email.split('@')[0]);
         if (onSuccess) onSuccess('user');
         else onClose();
       }, 1500);
@@ -55,6 +87,21 @@ const AuthModal = ({ isOpen, onClose, mode: initialMode = 'login', isMandatory =
     else if (internalMode === 'register' || internalMode === 'forgot_password') {
       setTimeout(() => {
         setIsLoading(false);
+        const usersStr = localStorage.getItem('registeredUsers');
+        const users = usersStr ? JSON.parse(usersStr) : {};
+        
+        if (internalMode === 'register' && users[email]) {
+          toast.error("Account already exists. Please log in.");
+          setInternalMode('login');
+          return;
+        }
+        
+        if (internalMode === 'forgot_password' && !users[email]) {
+          toast.error("Account not found. Please sign up first.");
+          setInternalMode('register');
+          return;
+        }
+
         toast.success(`OTP sent to your email!`);
         setInternalMode('otp');
       }, 1500);
@@ -64,7 +111,16 @@ const AuthModal = ({ isOpen, onClose, mode: initialMode = 'login', isMandatory =
       setTimeout(() => {
         setIsLoading(false);
         if (otpCode.length === 6) {
+          const usersStr = localStorage.getItem('registeredUsers');
+          const users = usersStr ? JSON.parse(usersStr) : {};
+          const userName = name || email.split('@')[0];
+          
+          users[email] = { password, name: userName };
+          localStorage.setItem('registeredUsers', JSON.stringify(users));
+
           toast.success("Identity verified successfully!");
+          localStorage.setItem('userEmail', email);
+          localStorage.setItem('userName', userName);
           if (onSuccess) onSuccess('user');
           else onClose();
         } else {
@@ -112,7 +168,7 @@ const AuthModal = ({ isOpen, onClose, mode: initialMode = 'login', isMandatory =
                   <div className="bg-primary/20 p-2 rounded-xl">
                     <Shield className="w-5 h-5 text-primary" />
                   </div>
-                  <h2 className="text-xl font-bold text-white">DigiProof AI</h2>
+                  <h2 className="text-xl font-bold text-white">Digiproof-AI</h2>
                 </div>
                 {!isMandatory && (
                   <button 
@@ -152,6 +208,8 @@ const AuthModal = ({ isOpen, onClose, mode: initialMode = 'login', isMandatory =
                       <input 
                         type="text" 
                         required
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         className="bg-dark/50 border border-white/10 text-white text-sm rounded-xl focus:ring-primary focus:border-primary block w-full pl-10 p-3 transition-colors" 
                         placeholder="John Doe"
                       />
@@ -181,17 +239,49 @@ const AuthModal = ({ isOpen, onClose, mode: initialMode = 'login', isMandatory =
                 {/* OTP Input Field */}
                 {internalMode === 'otp' && (
                   <div>
-                    <label className="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wide">6-Digit Code</label>
-                    <div className="flex justify-center space-x-2">
-                       <input 
-                        type="text" 
-                        required
-                        maxLength={6}
-                        value={otpCode}
-                        onChange={(e) => setOtpCode(e.target.value.replace(/[^0-9]/g, ''))}
-                        className="bg-dark/50 border border-white/10 text-white text-center text-xl tracking-[0.5em] font-bold rounded-xl focus:ring-primary focus:border-primary block w-full p-4 transition-colors" 
-                        placeholder="••••••"
-                      />
+                    <label className="block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wide text-center">6-Digit Code</label>
+                    <div className="flex justify-between space-x-2">
+                      {otpArray.map((digit, index) => (
+                        <input
+                          key={index}
+                          ref={(el) => (otpRefs.current[index] = el)}
+                          type="text"
+                          required
+                          maxLength={1}
+                          value={digit}
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/[^0-9]/g, '');
+                            const newOtp = [...otpArray];
+                            newOtp[index] = val;
+                            setOtpArray(newOtp);
+                            setOtpCode(newOtp.join(''));
+                            
+                            if (val && index < 5) {
+                              otpRefs.current[index + 1]?.focus();
+                            }
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Backspace' && !digit && index > 0) {
+                              otpRefs.current[index - 1]?.focus();
+                            }
+                          }}
+                          onPaste={(e) => {
+                            e.preventDefault();
+                            const pastedData = e.clipboardData.getData('text/plain').replace(/[^0-9]/g, '').slice(0, 6);
+                            if (pastedData) {
+                              const newOtp = [...otpArray];
+                              for (let i = 0; i < pastedData.length; i++) {
+                                newOtp[i] = pastedData[i];
+                              }
+                              setOtpArray(newOtp);
+                              setOtpCode(newOtp.join(''));
+                              const focusIndex = Math.min(pastedData.length, 5);
+                              otpRefs.current[focusIndex]?.focus();
+                            }
+                          }}
+                          className="bg-dark/50 border border-white/10 text-white text-center text-xl font-bold rounded-xl focus:ring-primary focus:border-primary block w-12 h-14 transition-colors" 
+                        />
+                      ))}
                     </div>
                   </div>
                 )}
@@ -289,6 +379,7 @@ const AuthModal = ({ isOpen, onClose, mode: initialMode = 'login', isMandatory =
                     onClick={() => {
                       setInternalMode(internalMode === 'register' ? 'login' : 'register');
                       setOtpCode('');
+                      setOtpArray(['', '', '', '', '', '']);
                     }} 
                     className="font-medium text-primary hover:underline"
                   >
